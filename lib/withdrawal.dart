@@ -61,6 +61,9 @@ class _WithdrawalCheckScreenState extends State<WithdrawalCheckScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double formWidgetsWidth = (MediaQuery.of(context).size.width >= 1440.0)
+        ? buttonDesktopWidth
+        : MediaQuery.of(context).size.width - 80;
     return Scaffold(
         appBar: AppBar(
           title: Text('Confirm Withdrawal'),
@@ -73,25 +76,29 @@ class _WithdrawalCheckScreenState extends State<WithdrawalCheckScreen> {
           ],
         ),
         body: ColumnView(
-            child: Container(
-                padding: EdgeInsets.all(10),
-                child: Column(children: [
-                  ListView(shrinkWrap: true, children: [
-                    ListTile(
-                        title: Text('Amount'),
-                        subtitle: Text(
-                            '${assetFormatWithUnitToUser(widget.asset.symbol, widget.amount != null ? widget.amount! : _extractedAmount)}')),
-                    ListTile(
-                        title: Text('Recipient'),
-                        subtitle: Text(shortenStr(widget.recipient)))
-                  ]),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        raisedButton(onPressed: _cancel, child: Text('Cancel')),
-                        raisedButton(onPressed: _ok, child: Text('Ok')),
-                      ])
-                ]))));
+            child: Center(
+                child: SizedBox(
+                    width: formWidgetsWidth,
+                    child: Container(
+                        padding: EdgeInsets.all(10),
+                        child: Column(children: [
+                          ListView(shrinkWrap: true, children: [
+                            ListTile(
+                                title: Text('Amount'),
+                                subtitle: Text(
+                                    '${assetFormatWithUnitToUser(widget.asset.symbol, widget.amount != null ? widget.amount! : _extractedAmount)}')),
+                            ListTile(
+                                title: Text('Recipient'),
+                                subtitle: Text(shortenStr(widget.recipient)))
+                          ]),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                raisedButton(
+                                    onPressed: _cancel, child: Text('Cancel')),
+                                raisedButton(onPressed: _ok, child: Text('Ok')),
+                              ])
+                        ]))))));
   }
 }
 
@@ -540,13 +547,19 @@ class _WithdrawalSelectScreenState extends State<WithdrawalSelectScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double formWidgetsWidth = (MediaQuery.of(context).size.width >= 1440.0)
+        ? buttonDesktopWidth
+        : MediaQuery.of(context).size.width - 80;
     return Scaffold(
       appBar: AppBar(
         title: Text('Withdrawals'),
       ),
-      body: ColumnView(
-          child: ListView.builder(
-              itemBuilder: _listItem, itemCount: _listCount())),
+      body: Center(
+          child: SizedBox(
+              width: formWidgetsWidth,
+              child: ColumnView(
+                  child: ListView.builder(
+                      itemBuilder: _listItem, itemCount: _listCount())))),
     );
   }
 }
@@ -654,6 +667,9 @@ class _CryptoWithdrawalsScreenState extends State<CryptoWithdrawalsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double formWidgetsWidth = (MediaQuery.of(context).size.width >= 1440.0)
+        ? buttonDesktopWidth
+        : MediaQuery.of(context).size.width - 80;
     var symbol = widget.l2Network != null
         ? widget.l2Network?.symbol
         : widget.asset.symbol;
@@ -663,21 +679,25 @@ class _CryptoWithdrawalsScreenState extends State<CryptoWithdrawalsScreen> {
         actions: [assetLogo('$symbol', margin: EdgeInsets.all(10))],
       ),
       body: ColumnView(
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-        SizedBox(height: 15),
-        BronzeRoundedButton(_make, ZapOnSecondary, ZapSecondary,
-            ZapSecondaryGradient, 'Make Withdrawal',
-            width: ButtonWidth, height: ButtonHeight),
-        _withdrawals.length == 0
-            ? Container(
-                margin: EdgeInsets.all(20),
-                child: Center(child: Text('No withdrawals')))
-            : ListView.builder(
-                shrinkWrap: true,
-                itemBuilder: _listItem,
-                itemCount: _withdrawals.length)
-      ])),
+          child: Center(
+              child: SizedBox(
+                  width: formWidgetsWidth,
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 15),
+                        BronzeRoundedButton(_make, ZapOnSecondary, ZapSecondary,
+                            ZapPrimaryGradient, 'Withdraw',
+                            width: ButtonWidth, height: ButtonHeight),
+                        _withdrawals.length == 0
+                            ? Container(
+                                margin: EdgeInsets.all(20),
+                                child: Center(child: Text('No withdrawals')))
+                            : ListView.builder(
+                                shrinkWrap: true,
+                                itemBuilder: _listItem,
+                                itemCount: _withdrawals.length)
+                      ])))),
       bottomNavigationBar: _pageCount > 0
           ? Paginator(_pageCount, _pageNumber, (n) => _initWithdrawals(n))
           : null,
@@ -740,6 +760,9 @@ class _CryptoWithdrawalDetailScreenState
 
   @override
   Widget build(BuildContext context) {
+    double formWidgetsWidth = (MediaQuery.of(context).size.width >= 1440.0)
+        ? buttonDesktopWidth
+        : MediaQuery.of(context).size.width - 80;
     return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -752,28 +775,33 @@ class _CryptoWithdrawalDetailScreenState
                 margin: EdgeInsets.all(10))
           ],
         ),
-        body: ColumnView(
-            child: ListView(children: [
-          ListTile(
-              title: Text('Amount'),
-              subtitle: Text(
-                  '${assetFormatWithUnitToUser(_withdrawal.asset, _withdrawal.amount)}')),
-          ListTile(title: Text('Date'), subtitle: Text('${_withdrawal.date}')),
-          ListTile(
-              title: Text('Recipient'),
-              subtitle: Text(shortenStr(_withdrawal.recipient)),
-              onTap: _addrLaunch,
-              trailing: IconButton(
-                  onPressed: _copyRecipient, icon: Icon(Icons.copy))),
-          Visibility(
-              visible: _withdrawal.txid != null,
-              child: ListTile(
-                  title: Text('Transaction Id'),
-                  subtitle: Text('${_withdrawal.txid}'))),
-          ListTile(
-              title: Text('Status'),
-              subtitle: Text('${_withdrawal.status.toUpperCase()}')),
-        ])));
+        body: Center(
+            child: SizedBox(
+                width: formWidgetsWidth,
+                child: ColumnView(
+                    child: ListView(children: [
+                  ListTile(
+                      title: Text('Amount'),
+                      subtitle: Text(
+                          '${assetFormatWithUnitToUser(_withdrawal.asset, _withdrawal.amount)}')),
+                  ListTile(
+                      title: Text('Date'),
+                      subtitle: Text('${_withdrawal.date}')),
+                  ListTile(
+                      title: Text('Recipient'),
+                      subtitle: Text(shortenStr(_withdrawal.recipient)),
+                      onTap: _addrLaunch,
+                      trailing: IconButton(
+                          onPressed: _copyRecipient, icon: Icon(Icons.copy))),
+                  Visibility(
+                      visible: _withdrawal.txid != null,
+                      child: ListTile(
+                          title: Text('Transaction Id'),
+                          subtitle: Text('${_withdrawal.txid}'))),
+                  ListTile(
+                      title: Text('Status'),
+                      subtitle: Text('${_withdrawal.status.toUpperCase()}')),
+                ])))));
   }
 }
 
@@ -871,27 +899,34 @@ class _FiatWithdrawalsScreenState extends State<FiatWithdrawalsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double formWidgetsWidth = (MediaQuery.of(context).size.width >= 1440.0)
+        ? buttonDesktopWidth
+        : MediaQuery.of(context).size.width - 80;
     return Scaffold(
       appBar: AppBar(
         title: Text('${widget.asset.symbol} Withdrawals'),
         actions: [assetLogo(widget.asset.symbol, margin: EdgeInsets.all(10))],
       ),
       body: ColumnView(
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-        SizedBox(height: 15),
-        BronzeRoundedButton(_make, ZapOnSecondary, ZapSecondary,
-            ZapSecondaryGradient, 'Make Withdrawal',
-            width: ButtonWidth, height: ButtonHeight),
-        _withdrawals.length == 0
-            ? Container(
-                margin: EdgeInsets.all(20),
-                child: Center(child: Text('No withdrawals')))
-            : ListView.builder(
-                shrinkWrap: true,
-                itemBuilder: _listItem,
-                itemCount: _withdrawals.length)
-      ])),
+          child: Center(
+              child: SizedBox(
+                  width: formWidgetsWidth,
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 15),
+                        BronzeRoundedButton(_make, ZapOnSecondary, ZapSecondary,
+                            ZapPrimaryGradient, 'Withdraw',
+                            width: ButtonWidth, height: ButtonHeight),
+                        _withdrawals.length == 0
+                            ? Container(
+                                margin: EdgeInsets.all(20),
+                                child: Center(child: Text('No withdrawals')))
+                            : ListView.builder(
+                                shrinkWrap: true,
+                                itemBuilder: _listItem,
+                                itemCount: _withdrawals.length)
+                      ])))),
       bottomNavigationBar: _pageCount > 0
           ? Paginator(_pageCount, _pageNumber, (n) => _initWithdrawals(n))
           : null,
@@ -942,24 +977,33 @@ class _FiatWithdrawalDetailScreenState
 
   @override
   Widget build(BuildContext context) {
+    double formWidgetsWidth = (MediaQuery.of(context).size.width >= 1440.0)
+        ? buttonDesktopWidth
+        : MediaQuery.of(context).size.width - 80;
     return Scaffold(
         appBar: AppBar(
           title: Text('Withdrawal ${_withdrawal.asset}'),
           actions: [assetLogo(_withdrawal.asset, margin: EdgeInsets.all(10))],
         ),
         body: ColumnView(
-            child: ListView(children: [
-          ListTile(
-              title: Text('Amount'),
-              subtitle: Text(
-                  '${assetFormatWithUnitToUser(_withdrawal.asset, _withdrawal.amount)}')),
-          ListTile(title: Text('Date'), subtitle: Text('${_withdrawal.date}')),
-          ListTile(
-              title: Text('Bank Account'),
-              subtitle: Text(_withdrawal.recipient)),
-          ListTile(
-              title: Text('Status'),
-              subtitle: Text('${_withdrawal.status.toUpperCase()}')),
-        ])));
+            child: Center(
+                child: SizedBox(
+                    width: formWidgetsWidth,
+                    child: ListView(children: [
+                      ListTile(
+                          title: Text('Amount'),
+                          subtitle: Text(
+                              '${assetFormatWithUnitToUser(_withdrawal.asset, _withdrawal.amount)}')),
+                      ListTile(
+                          title: Text('Date'),
+                          subtitle: Text('${_withdrawal.date}')),
+                      ListTile(
+                          title: Text('Bank Account'),
+                          subtitle: Text(_withdrawal.recipient)),
+                      ListTile(
+                          title: Text('Status'),
+                          subtitle:
+                              Text('${_withdrawal.status.toUpperCase()}')),
+                    ])))));
   }
 }
