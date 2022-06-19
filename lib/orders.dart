@@ -13,6 +13,7 @@ import 'assets.dart';
 import 'snack.dart';
 import 'paginator.dart';
 import 'widgets.dart';
+import 'config.dart';
 
 class OrderScreen extends StatefulWidget {
   final BeBrokerOrder order;
@@ -237,12 +238,15 @@ class _OrdersScreenState extends State<OrdersScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double formWidgetsWidth = (MediaQuery.of(context).size.width >= 1440.0)
+        ? buttonDesktopWidth
+        : MediaQuery.of(context).size.width - 80;
     return Scaffold(
         appBar: AppBar(
           title: Text('Orders'),
         ),
         body:
-            ListView.builder(itemBuilder: _listItem, itemCount: _orders.length),
+            Center(child: SizedBox(width: formWidgetsWidth, child: ListView.builder(itemBuilder: _listItem, itemCount: _orders.length))),
         /*
         floatingActionButton: FloatingActionButton(
             child: const Icon(Icons.add), onPressed: _actionButtonTap),
