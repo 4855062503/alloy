@@ -356,41 +356,37 @@ class _WithdrawalFormScreenState extends State<WithdrawalFormScreen> {
                       Visibility(
                           visible:
                               widget.asset.isCrypto && widget.l2Network != null,
-                          child: TextFormField(
-                              controller: _recipientController,
-                              maxLines: null,
-                              decoration: InputDecoration(
-                                  labelText: 'Recipient',
-                                  suffixIcon: IconButton(
-                                      onPressed: _scanRecipient,
-                                      icon: Icon(Icons.qr_code))),
+                          child: BronzeFormInput(_recipientController,
+                              labelText: 'Recipient',
+                              icon: Icon(Icons.person),
+                              suffix: IconButton(
+                                  onPressed: _scanRecipient,
+                                  icon: Icon(Icons.qr_code)),
                               keyboardType: TextInputType.text,
                               validator: (value) {
-                                if (value == null || value.isEmpty)
-                                  return 'Please enter a value';
-                                var res = l2RecipientValidate(
-                                    widget.l2Network!.symbol, _testnet, value);
-                                if (!res.result) return res.reason;
-                                return null;
-                              })),
+                            if (value == null || value.isEmpty)
+                              return 'Please enter a value';
+                            var res = l2RecipientValidate(
+                                widget.l2Network!.symbol, _testnet, value);
+                            if (!res.result) return res.reason;
+                            return null;
+                          })),
                       Visibility(
                           visible: !widget.asset.isCrypto,
-                          child: TextFormField(
-                              controller: _recipientController,
-                              decoration: InputDecoration(
-                                  labelText: 'Bank Account',
-                                  suffix: IconButton(
-                                      icon: Icon(Icons.alternate_email),
-                                      tooltip: 'Address Book',
-                                      onPressed: _addressBook)),
+                          child: BronzeFormInput(_recipientController,
+                              labelText: 'Bank Account',
+                              suffix: IconButton(
+                                  icon: Icon(Icons.alternate_email),
+                                  tooltip: 'Address Book',
+                                  onPressed: _addressBook),
                               keyboardType: TextInputType.number,
                               validator: (value) {
-                                if (value == null || value.isEmpty)
-                                  return 'Please enter a value';
-                                var res = bankValidate(value);
-                                if (!res.result) return res.reason;
-                                return null;
-                              })),
+                            if (value == null || value.isEmpty)
+                              return 'Please enter a value';
+                            var res = bankValidate(value);
+                            if (!res.result) return res.reason;
+                            return null;
+                          })),
                       Visibility(
                           visible: !widget.asset.isCrypto ||
                               widget.l2Network == null,
