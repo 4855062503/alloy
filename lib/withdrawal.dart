@@ -299,62 +299,60 @@ class _WithdrawalFormScreenState extends State<WithdrawalFormScreen> {
                       Visibility(
                           visible: !widget.asset.isCrypto ||
                               widget.l2Network == null,
-                          child: TextFormField(
-                              controller: _amountController,
-                              decoration: InputDecoration(
-                                  labelText:
-                                      'Amount (${assetUnit(widget.asset.symbol)})',
-                                  suffix: TextButton(
-                                      child: Text('max',
-                                          style:
-                                              TextStyle(color: ZapOnPrimary)),
-                                      onPressed: _setMax)),
+                          child: BronzeFormInput(_amountController,
+                              icon: Icon(Icons.currency_bitcoin_outlined),
+                              labelText:
+                                  'Amount (${assetUnit(widget.asset.symbol)})',
+                              suffix: TextButton(
+                                  child: Text('max',
+                                      style: TextStyle(color: ZapOnPrimary)),
+                                  onPressed: _setMax),
                               keyboardType: TextInputType.numberWithOptions(
-                                  signed: false, decimal: true),
-                              validator: (value) {
-                                if (value == null || value.isEmpty)
-                                  return 'Please enter a value';
-                                var userAmount = Decimal.tryParse(value.trim());
-                                if (userAmount == null) return 'Invalid value';
-                                if (userAmount <= Decimal.zero)
-                                  'Please return a value greater then 0';
-                                var withdrawAsset =
-                                    widget.l2Network ?? widget.asset;
-                                var sysAmount = assetAmountFromUser(
-                                    widget.asset.symbol, userAmount);
-                                if (sysAmount < withdrawAsset.minWithdraw)
-                                  return 'Please enter a value greater then or equal to ${assetAmountToUser(widget.asset.symbol, withdrawAsset.minWithdraw)}';
-                                if (sysAmount > _max)
-                                  return 'Please enter a value less then or equal to ${assetAmountToUser(widget.asset.symbol, _max)}';
-                                return null;
-                              })),
+                                  signed: false,
+                                  decimal: true), validator: (value) {
+                            if (value == null || value.isEmpty)
+                              return 'Please enter a value';
+                            var userAmount = Decimal.tryParse(value.trim());
+                            if (userAmount == null) return 'Invalid value';
+                            if (userAmount <= Decimal.zero)
+                              'Please return a value greater then 0';
+                            var withdrawAsset =
+                                widget.l2Network ?? widget.asset;
+                            var sysAmount = assetAmountFromUser(
+                                widget.asset.symbol, userAmount);
+                            if (sysAmount < withdrawAsset.minWithdraw)
+                              return 'Please enter a value greater then or equal to ${assetAmountToUser(widget.asset.symbol, withdrawAsset.minWithdraw)}';
+                            if (sysAmount > _max)
+                              return 'Please enter a value less then or equal to ${assetAmountToUser(widget.asset.symbol, _max)}';
+                            return null;
+                          })),
+                      SizedBox(height: 15),
                       Visibility(
                           visible:
                               widget.asset.isCrypto && widget.l2Network == null,
-                          child: TextFormField(
-                              controller: _recipientController,
-                              decoration: InputDecoration(
-                                  labelText: 'Wallet Address',
-                                  suffix: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        IconButton(
-                                            icon: Icon(Icons.alternate_email),
-                                            tooltip: 'Address Book',
-                                            onPressed: _addressBook),
-                                        IconButton(
-                                            onPressed: _scanRecipient,
-                                            icon: Icon(Icons.qr_code))
-                                      ])),
+                          child: BronzeFormInput(_recipientController,
+                              icon: Icon(Icons.person),
+                              labelText: 'Wallet Address',
+                              suffix: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                        icon: Icon(Icons.alternate_email),
+                                        tooltip: 'Address Book',
+                                        onPressed: _addressBook),
+                                    IconButton(
+                                        onPressed: _scanRecipient,
+                                        icon: Icon(Icons.qr_code))
+                                  ]),
                               keyboardType: TextInputType.text,
                               validator: (value) {
-                                if (value == null || value.isEmpty)
-                                  return 'Please enter a value';
-                                var res = addressValidate(
-                                    widget.asset.symbol, _testnet, value);
-                                if (!res.result) return res.reason;
-                                return null;
-                              })),
+                            if (value == null || value.isEmpty)
+                              return 'Please enter a value';
+                            var res = addressValidate(
+                                widget.asset.symbol, _testnet, value);
+                            if (!res.result) return res.reason;
+                            return null;
+                          })),
                       Visibility(
                           visible:
                               widget.asset.isCrypto && widget.l2Network != null,
@@ -406,18 +404,18 @@ class _WithdrawalFormScreenState extends State<WithdrawalFormScreen> {
                                   : null)),
                       Visibility(
                           visible: _saveRecipient || !widget.asset.isCrypto,
-                          child: TextFormField(
-                              controller: _recipientDescriptionController,
-                              decoration: InputDecoration(
-                                  labelText: widget.asset.isCrypto
-                                      ? 'Wallet Address Description'
-                                      : 'Bank Account Description'),
+                          child: BronzeFormInput(
+                              _recipientDescriptionController,
+                              icon: Icon(Icons.description),
+                              labelText: widget.asset.isCrypto
+                                  ? 'Wallet Address Description'
+                                  : 'Bank Account Description',
                               keyboardType: TextInputType.text,
                               validator: (value) {
-                                if (value == null || value.isEmpty)
-                                  return 'Please enter a value';
-                                return null;
-                              })),
+                            if (value == null || value.isEmpty)
+                              return 'Please enter a value';
+                            return null;
+                          })),
                       Visibility(
                           visible: !widget.asset.isCrypto,
                           child: Card(
@@ -428,47 +426,39 @@ class _WithdrawalFormScreenState extends State<WithdrawalFormScreen> {
                                   child: Column(children: [
                                     Text('Bank Account Details',
                                         style: TextStyle(fontSize: 16)),
-                                    TextFormField(
-                                        controller: _accountNameController,
-                                        decoration: InputDecoration(
-                                            labelText: 'Account Name'),
+                                    BronzeFormInput(_accountNameController,
+                                        labelText: 'Account Name',
                                         keyboardType: TextInputType.text,
                                         validator: (value) {
-                                          if (value == null || value.isEmpty)
-                                            return 'Please enter a value';
-                                          return null;
-                                        }),
-                                    TextFormField(
-                                        controller: _accountAddr01Controller,
-                                        decoration: InputDecoration(
-                                            labelText: 'Address Line 1'),
+                                      if (value == null || value.isEmpty)
+                                        return 'Please enter a value';
+                                      return null;
+                                    }),
+                                    BronzeFormInput(_accountAddr01Controller,
+                                        labelText: 'Address Line 1',
                                         keyboardType: TextInputType.text,
                                         validator: (value) {
-                                          if (value == null || value.isEmpty)
-                                            return 'Please enter a value';
-                                          return null;
-                                        }),
-                                    TextFormField(
-                                        controller: _accountAddr02Controller,
-                                        decoration: InputDecoration(
-                                            labelText: 'Address Line 2'),
+                                      if (value == null || value.isEmpty)
+                                        return 'Please enter a value';
+                                      return null;
+                                    }),
+                                    BronzeFormInput(_accountAddr02Controller,
+                                        labelText: 'Address Line 2',
                                         keyboardType: TextInputType.text,
                                         validator: (value) {
-                                          if (value == null || value.isEmpty)
-                                            return 'Please enter a value';
-                                          return null;
-                                        }),
-                                    TextFormField(
-                                        controller:
-                                            _accountAddrCountryController,
-                                        decoration: InputDecoration(
-                                            labelText: 'Country'),
+                                      if (value == null || value.isEmpty)
+                                        return 'Please enter a value';
+                                      return null;
+                                    }),
+                                    BronzeFormInput(
+                                        _accountAddrCountryController,
+                                        labelText: 'Country',
                                         keyboardType: TextInputType.text,
                                         validator: (value) {
-                                          if (value == null || value.isEmpty)
-                                            return 'Please enter a value';
-                                          return null;
-                                        }),
+                                      if (value == null || value.isEmpty)
+                                        return 'Please enter a value';
+                                      return null;
+                                    }),
                                   ])))),
                       SizedBox(height: 15),
                       BronzeRoundedButton(_withdrawalCreate, ZapOnSecondary,
