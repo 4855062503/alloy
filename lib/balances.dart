@@ -4,6 +4,7 @@ import 'beryllium.dart';
 import 'websocket.dart';
 import 'assets.dart';
 import 'widgets.dart';
+import 'config.dart';
 
 class BalanceScreen extends StatefulWidget {
   final List<BeBalance> balances;
@@ -27,13 +28,20 @@ class _BalanceScreenState extends State<BalanceScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double formWidgetsWidth = (MediaQuery.of(context).size.width >= 1440.0)
+        ? buttonDesktopWidth
+        : MediaQuery.of(context).size.width - 80;
     return Scaffold(
         appBar: AppBar(
           title: Text('Balances'),
         ),
         body: ColumnView(
-          child: ListView.builder(
-              itemBuilder: _listItem, itemCount: widget.balances.length),
+          child: Center(
+              child: SizedBox(
+                  width: formWidgetsWidth,
+                  child: ListView.builder(
+                      itemBuilder: _listItem,
+                      itemCount: widget.balances.length))),
         ));
   }
 }

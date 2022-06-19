@@ -1,9 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
-
 import 'package:zapdart/colors.dart';
+import 'package:zapdart/utils.dart';
 
 import 'config.dart' as cfg;
+
+class BronzeFormInput extends StatelessWidget {
+  final TextEditingController? controller;
+  final TextInputType? keyboardType;
+  final FormFieldValidator<dynamic>? validator;
+  final String? labelText;
+  final bool? obscureText;
+  final Icon? icon;
+  BronzeFormInput(this.controller,
+      {this.validator,
+      this.keyboardType,
+      this.obscureText,
+      this.labelText,
+      this.icon})
+      : super();
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+        textAlign: TextAlign.center,
+        controller: this.controller,
+        decoration: InputDecoration(
+          prefixIcon: this.icon == null
+              ? null
+              : Padding(
+                  padding: EdgeInsets.only(top: 5),
+                  child: this.icon,
+                ),
+          contentPadding: const EdgeInsets.symmetric(vertical: 25.0),
+          fillColor: Color(0xFFFFFFFF).withOpacity(0.1),
+          filled: true,
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          labelText: this.labelText ?? null,
+          constraints: BoxConstraints(
+              minWidth: cfg.ButtonWidth, maxWidth: cfg.ButtonWidth),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(40),
+            borderSide: BorderSide(
+              width: 0,
+              style: BorderStyle.none,
+            ),
+          ),
+        ),
+        keyboardType: this.keyboardType ?? null,
+        obscureText: this.obscureText ?? false,
+        validator: this.validator ?? null);
+  }
+}
 
 class ColumnView extends StatelessWidget {
   final Widget? child;

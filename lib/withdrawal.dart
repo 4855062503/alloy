@@ -471,9 +471,11 @@ class _WithdrawalFormScreenState extends State<WithdrawalFormScreen> {
                                         }),
                                   ])))),
                       SizedBox(height: 15),
-                      raisedButton(
-                          onPressed: _withdrawalCreate,
-                          child: Text('Create Withdrawal'))
+                      BronzeRoundedButton(_withdrawalCreate, ZapOnSecondary,
+                          ZapSecondary, ZapPrimaryGradient, 'Withdraw',
+                          holePunch: true,
+                          width: ButtonWidth,
+                          height: ButtonHeight),
                     ])))));
   }
 }
