@@ -372,28 +372,11 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // exchange widget
-                _userInfo != null ? ExchangeWidget(_websocket) : SizedBox(),
+                VerticalSpacer(),
                 // home screen buttons
                 Visibility(
                     visible: _userInfo != null,
                     child: Column(mainAxisSize: MainAxisSize.min, children: [
-                      Row(mainAxisSize: MainAxisSize.min, children: [
-                        SquareButton(_orders, Icons.history, ZapSecondary,
-                            'Order History',
-                            textColor: ZapOnSecondary,
-                            textOutside: false,
-                            borderSize: 0,
-                            fontSize: 18),
-                        SizedBox(width: 15),
-                        SquareButton(_balances, Icons.wallet_rounded,
-                            ZapSecondary, 'Balances',
-                            textColor: ZapOnSecondary,
-                            textOutside: false,
-                            borderSize: 0,
-                            fontSize: 18)
-                      ]),
-                      VerticalSpacer(),
                       Row(mainAxisSize: MainAxisSize.min, children: [
                         SquareButton(
                             _deposit,
@@ -415,7 +398,25 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                             borderSize: 0,
                             fontSize: 18)
                       ]),
+                      VerticalSpacer(),
+                      Row(mainAxisSize: MainAxisSize.min, children: [
+                        SquareButton(_orders, Icons.history, ZapSecondary,
+                            'Order History',
+                            textColor: ZapOnSecondary,
+                            textOutside: false,
+                            borderSize: 0,
+                            fontSize: 18),
+                        SizedBox(width: 15),
+                        SquareButton(_balances, Icons.wallet_rounded,
+                            ZapSecondary, 'Balances',
+                            textColor: ZapOnSecondary,
+                            textOutside: false,
+                            borderSize: 0,
+                            fontSize: 18)
+                      ]),
                     ])),
+                // exchange widget
+                _userInfo != null ? ExchangeWidget(_websocket) : SizedBox(),
               ],
             ),
           ),
