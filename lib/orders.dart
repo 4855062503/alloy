@@ -96,14 +96,19 @@ class _OrderScreenState extends State<OrderScreen> {
               title: Text('Status'),
               subtitle: Text('${describeEnum(_order.status).toUpperCase()}')),
           _order.status == BeOrderStatus.created
-              ? Row(
+              ? Column(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                       BronzeRoundedButton(_accept, ZapOnPrimary, ZapPrimary,
                           ZapPrimaryGradient, 'Accept',
                           fwdArrow: true,
                           width: cfg.ButtonWidth,
-                          height: cfg.ButtonHeight)
+                          height: cfg.ButtonHeight),
+                      BronzeRoundedButton(() {
+                        Navigator.pop(context);
+                      }, ZapOnSurface, ZapSurface, null, 'Close',
+                          width: cfg.ButtonWidth, height: cfg.ButtonHeight)
                     ])
               : SizedBox(),
         ])));
